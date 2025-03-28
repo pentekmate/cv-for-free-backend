@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->create([
             'email'=>'erno801@gmail.com',
-            'password'=>'pwd11'
+            'password'=>'pwd11',
+            'tier'=>0
         ]);
         $this->call(TemplateSeeder::class);
     }
