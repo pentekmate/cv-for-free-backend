@@ -9,9 +9,10 @@ class CV extends Model
 {
     /** @use HasFactory<\Database\Factories\CVFactory> */
     use HasFactory;
+
     protected $table = 'cvs';
 
-    protected $fillable = ['tier','userName','image','firstName','lastName','phoneNumber','email','country','city','jobTitle','introduce','age','ethnic'];
+    protected $fillable = ['tier', 'userName', 'image', 'firstName', 'lastName', 'phoneNumber', 'email', 'country', 'city', 'jobTitle', 'introduce', 'age', 'ethnic'];
 
     public function user(): BelongsTo
     {
