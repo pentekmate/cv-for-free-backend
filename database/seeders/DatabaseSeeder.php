@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
             'tier'=>0
         ]);
         $this->call(TemplateSeeder::class);
+        $this->call(CVSeeder::class);
     }
 }

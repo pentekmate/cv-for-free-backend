@@ -34,6 +34,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
+    public function cvs(): HasMany
+    {
+        return $this->hasMany(Cv::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
