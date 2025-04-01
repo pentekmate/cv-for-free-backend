@@ -2,57 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCvRequest;
+use App\Models\CV;
+use App\Models\PreviousJob;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class CVController extends Controller
 {
-    public function createCv(Request $request)
+    public function index(Request $request)
     {
-        // Manuálisan végezzük el a validálást
-        $validator = Validator::make($request->all(), [
-            'data.user_id' => 'integer|required',
-            'data.userName' => 'string|nullable',
-            'data.image' => 'string|nullable',
-            'data.firstName' => 'string|nullable',
-            'data.lastName' => 'string|nullable',
-            'data.phoneNumber' => 'string|nullable',
-            'data.email' => 'email|nullable',
-            'data.country' => 'string|nullable',
-            'data.city' => 'string|nullable',
-            'data.jobTitle' => 'integer|nullable',
-            'data.introduce' => 'string|nullable',
-            'data.age' => 'integer|nullable|min:18|max:100',
-            'data.ethnic' => 'string|nullable',
+        // Ellenőrizzük, hogy a felhasználó be van-e jelentkezve
+        try {
+            $authUser = auth()->user();
+            $cvs = CV::where('user_id', $authUser->id)
+                ->with('previousJobs')  // Betöltjük a kapcsolódó adatokat
+                ->get();
 
-            'previousJobs' => 'array|nullable',
-            'previousJobs.*.employer' => 'string|nullable',
-            'previousJobs.*.jobTitle' => 'string|nullable',
-            'previousJobs.*.startDate' => 'date|nullable',
-            'previousJobs.*.endDate' => 'date|nullable|after_or_equal:previousJobs.*.startDate',
-            'previousJobs.*.description' => 'string|nullable',
-            'previousJobs.*.city' => 'string|nullable',
+            return response()->json(['m' => $cvs]);
 
-            'skills' => 'array|nullable',
-            'skills.*.skillName' => 'string|nullable',
-            'skills.*.skillLevel' => 'integer|nullable',
-        ]);
-
-        // Ha a validálás nem sikerült, visszaadjuk a hibákat JSON formátumban
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Hiba történt a validálás során.',
-                'errors' => $validator->errors(),
-            ], 422); // 422-es státuszkód a validálási hibákhoz
+        } catch (\Exception $e) {
+            // Ha bármilyen kivétel történik, hibát küldünk vissza
+            return response()->json(['message' => $e->getMessage()], 401); // 401 Unauthorized
         }
 
-        // A validálás sikeres, folytatjuk az adat mentését
-        $validatedData = $validator->validated();
+    }
 
-        // Válasz visszaküldése
-        return response()->json([
-            'message' => 'A CV sikeresen elmentve!',
-            'data' => $validatedData,
-        ]);
+    public function createCv(StoreCvRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        // $cvData = $validatedData["data"];
+        // if(isset($validatedData["licenses"])){
+        //     $licenses = $validatedData["licenses"];
+        // }
+        $newCv = CV::create($validatedData['data']);
+
+        if (isset($validatedData['previousJobs'])) {
+            $previousJobs = $validatedData['previousJobs'];
+
+            foreach ($previousJobs as $prevJob) {
+                PreviousJob::create(array_merge($prevJob, [
+                    'cv_id' => $newCv->id,
+                ]));
+            }
+        }
+
+        return response()->json(['data' => $newCv]);
     }
 }

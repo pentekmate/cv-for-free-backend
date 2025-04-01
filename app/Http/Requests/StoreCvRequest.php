@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreCvRequest extends FormRequest
 {
@@ -31,7 +33,7 @@ class StoreCvRequest extends FormRequest
             'data.email' => 'email|nullable',
             'data.country' => 'string|nullable',
             'data.city' => 'string|nullable',
-            'data.jobTitle' => 'integer|nullable',
+            'data.jobTitle' => 'string|nullable',
             'data.introduce' => 'string|nullable',
             'data.age' => 'integer|nullable|min:18|max:100',
             'data.ethnic' => 'string|nullable',
@@ -64,7 +66,7 @@ class StoreCvRequest extends FormRequest
             'data.email.email' => 'Érvényes email címnek kell lennie!',
             'data.country.string' => 'Az ország neve szövegként kell megadni!',
             'data.city.string' => 'A város neve szövegként kell megadni!',
-            'data.jobTitle.integer' => 'A munkakör címének egész számnak kell lennie!',
+            'data.jobTitle.string' => 'A munkakör címének stringnek kell lennie!',
             'data.introduce.string' => 'Az önbemutatónak szövegnek kell lennie!',
             'data.age.integer' => 'A kornak egész számnak kell lennie!',
             'data.age.min' => 'A kor legalább 18 éves kell legyen!',
@@ -82,5 +84,13 @@ class StoreCvRequest extends FormRequest
             'skills.*.skillName.string' => 'A készség nevének szövegnek kell lennie!',
             'skills.*.skillLevel.integer' => 'A készségi szintnek egész számnak kell lennie!',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Hiba történt a validálás során!',
+            'errors' => $validator->errors(),
+        ], 422));
     }
 }

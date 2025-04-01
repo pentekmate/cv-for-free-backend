@@ -4,11 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CVController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware(['throttle:global'])->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/createCv', [CVController::class, 'createCv']);
 
-Route::get('/me', [AuthController::class, 'me']);
+});
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/userCVs', [CVController::class, 'index']);
     Route::get('logout', [AuthController::class, 'logout']);
-    Route::post('createCv', [CVController::class, 'createCv']);
 });
