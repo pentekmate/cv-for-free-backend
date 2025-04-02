@@ -9,8 +9,9 @@ class Language extends Model
 {
     //
 
-    protected $fillable = ['languageName','languageLevel','cv_id'];
-    public function cv():BelongsTo
+    protected $fillable = ['languageName', 'languageLevel', 'cv_id'];
+
+    public function cv(): BelongsTo
     {
         return $this->belongsTo(Cv::class);
     }

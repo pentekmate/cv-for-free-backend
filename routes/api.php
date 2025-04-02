@@ -9,12 +9,9 @@ Route::middleware(['throttle:global'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/createCv', [CVController::class, 'createCv']);
 
-
-    
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/userCVs', [CVController::class, 'index']);
         Route::get('/logout', [AuthController::class, 'logout']);
     });
 
 });
-

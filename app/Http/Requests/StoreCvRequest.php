@@ -53,6 +53,13 @@ class StoreCvRequest extends FormRequest
             'languages' => 'array|nullable',
             'languages.*.languageName' => 'string|nullable',
             'languages.*.languageLevel' => 'integer|nullable',
+
+            'schools' => 'array|nullable',
+            'school.*.schoolName' => 'string|nullable',
+            'school.*.degree' => 'string|nullable',
+            'school.*.startDate' => 'date|nullable',
+            'school.*.endDate' => 'date|nullable|after_or_equal:school.*.startDate',
+            'school.*.city' => 'string|nullable',
         ];
 
     }

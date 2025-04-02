@@ -6,7 +6,6 @@ use App\Http\Requests\StoreCvRequest;
 use App\Models\CV;
 use App\Models\PreviousJob;
 use App\Models\Skill;
-use Hash;
 use Illuminate\Http\Request;
 
 class CVController extends Controller
@@ -17,10 +16,14 @@ class CVController extends Controller
         try {
             $authUser = auth()->user();
             $cvs = CV::where('user_id', $authUser->id)
-                ->with(['previousJobs','skills'])  // Betöltjük a kapcsolódó adatokat
+                ->withAll() // Betöltjük a kapcsolódó adatokat
                 ->get();
 
-            return response()->json(['m' => $cvs]);
+            // return response()->json(['m' => $cvs]);
+
+            $relations = (new CV)->getSupportedRelations();
+
+            return response()->json(['relations' => $relations]);
 
         } catch (\Exception $e) {
             // Ha bármilyen kivétel történik, hibát küldünk vissza
@@ -33,11 +36,10 @@ class CVController extends Controller
     {
         $validatedData = $request->validated();
 
-  
         $newCv = CV::create($validatedData['data']);
 
         if (isset($validatedData['previousJobs'])) {
-            $previousJobs =$validatedData['previousJobs'];
+            $previousJobs = $validatedData['previousJobs'];
 
             foreach ($previousJobs as $prevJob) {
                 PreviousJob::create(array_merge($prevJob, [
@@ -47,7 +49,7 @@ class CVController extends Controller
         }
 
         if (isset($validatedData['skills'])) {
-            $skills =$validatedData['skills'];
+            $skills = $validatedData['skills'];
 
             foreach ($skills as $skill) {
                 Skill::create(array_merge($skill, [
@@ -56,9 +58,8 @@ class CVController extends Controller
             }
         }
 
-
         if (isset($validatedData['languages'])) {
-            $languages =$validatedData['languages'];
+            $languages = $validatedData['languages'];
 
             foreach ($languages as $language) {
                 Skill::create(array_merge($language, [
@@ -66,10 +67,9 @@ class CVController extends Controller
                 ]));
             }
         }
-        
 
         return response()->json([
-            'message'=>'cv Sikeresen létrehozva',
+            'message' => 'cv Sikeresen létrehozva',
             'data' => $newCv]);
     }
 }
