@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCvRequest;
 use App\Models\CV;
 use App\Models\PreviousJob;
+use App\Models\Skill;
+use Hash;
 use Illuminate\Http\Request;
 
 class CVController extends Controller
@@ -15,7 +17,7 @@ class CVController extends Controller
         try {
             $authUser = auth()->user();
             $cvs = CV::where('user_id', $authUser->id)
-                ->with('previousJobs')  // Betöltjük a kapcsolódó adatokat
+                ->with(['previousJobs','skills'])  // Betöltjük a kapcsolódó adatokat
                 ->get();
 
             return response()->json(['m' => $cvs]);
@@ -31,14 +33,11 @@ class CVController extends Controller
     {
         $validatedData = $request->validated();
 
-        // $cvData = $validatedData["data"];
-        // if(isset($validatedData["licenses"])){
-        //     $licenses = $validatedData["licenses"];
-        // }
+  
         $newCv = CV::create($validatedData['data']);
 
         if (isset($validatedData['previousJobs'])) {
-            $previousJobs = $validatedData['previousJobs'];
+            $previousJobs =$validatedData['previousJobs'];
 
             foreach ($previousJobs as $prevJob) {
                 PreviousJob::create(array_merge($prevJob, [
@@ -47,6 +46,30 @@ class CVController extends Controller
             }
         }
 
-        return response()->json(['data' => $newCv]);
+        if (isset($validatedData['skills'])) {
+            $skills =$validatedData['skills'];
+
+            foreach ($skills as $skill) {
+                Skill::create(array_merge($skill, [
+                    'cv_id' => $newCv->id,
+                ]));
+            }
+        }
+
+
+        if (isset($validatedData['languages'])) {
+            $languages =$validatedData['languages'];
+
+            foreach ($languages as $language) {
+                Skill::create(array_merge($language, [
+                    'cv_id' => $newCv->id,
+                ]));
+            }
+        }
+        
+
+        return response()->json([
+            'message'=>'cv Sikeresen létrehozva',
+            'data' => $newCv]);
     }
 }

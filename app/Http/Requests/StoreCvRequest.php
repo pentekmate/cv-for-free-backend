@@ -49,6 +49,10 @@ class StoreCvRequest extends FormRequest
             'skills' => 'array|nullable',
             'skills.*.skillName' => 'string|nullable',
             'skills.*.skillLevel' => 'integer|nullable',
+
+            'languages' => 'array|nullable',
+            'languages.*.languageName' => 'string|nullable',
+            'languages.*.languageLevel' => 'integer|nullable',
         ];
 
     }
