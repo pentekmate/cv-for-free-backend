@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cv_id')->constrained()->onDelete('cascade');
             $table->string('type')->nullable();
+            $table->timestamps();
         });
     }
 

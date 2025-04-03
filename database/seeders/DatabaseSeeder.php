@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             'password' => 'pwd11',
             'tier' => 0,
         ]);
-        // $this->call(TemplateSeeder::class);
+        $this->call(TemplateSeeder::class);
         // $this->call(CVSeeder::class);
     }
 }

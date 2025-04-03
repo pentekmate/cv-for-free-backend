@@ -15,7 +15,12 @@ class CV extends Model
 
     protected $table = 'cvs';
 
-    protected $fillable = ['tier', 'user_id', 'userName', 'image', 'firstName', 'lastName', 'phoneNumber', 'email', 'country', 'city', 'jobTitle', 'introduce', 'age', 'ethnic'];
+    protected $fillable = ['tier', 'cv_type_id', 'user_id', 'userName', 'image', 'firstName', 'lastName', 'phoneNumber', 'email', 'country', 'city', 'jobTitle', 'introduce', 'age', 'ethnic'];
+
+    public function type()
+    {
+        return $this->belongsTo(Template::class, 'cv_type_id');
+    }
 
     public function user(): BelongsTo
     {
@@ -35,7 +40,7 @@ class CV extends Model
      */
     public function skills(): HasMany
     {
-        return $this->hasMany(Skill::class,'cv_id');
+        return $this->hasMany(Skill::class, 'cv_id');
     }
 
     /**
@@ -43,7 +48,7 @@ class CV extends Model
      */
     public function schools(): HasMany
     {
-        return $this->hasMany(School::class,'cv_id');
+        return $this->hasMany(School::class, 'cv_id');
     }
 
     /**
@@ -51,7 +56,7 @@ class CV extends Model
      */
     public function socials(): HasMany
     {
-        return $this->hasMany(Social::class,'cv_id');
+        return $this->hasMany(Social::class, 'cv_id');
     }
 
     /**
@@ -59,7 +64,7 @@ class CV extends Model
      */
     public function languages(): HasMany
     {
-        return $this->hasMany(Language::class,'cv_id');
+        return $this->hasMany(Language::class, 'cv_id');
     }
 
     /**
@@ -67,7 +72,7 @@ class CV extends Model
      */
     public function licenses(): HasMany
     {
-        return $this->hasMany(License::class,'cv_id');
+        return $this->hasMany(License::class, 'cv_id');
     }
 
     public static function getSupportedRelations()

@@ -25,6 +25,7 @@ class StoreCvRequest extends FormRequest
     {
         return [
             'data.user_id' => 'integer|required',
+            'data.cv_type_id' => 'integer|required',
             'data.userName' => 'string|nullable',
             'data.image' => 'string|nullable',
             'data.firstName' => 'string|nullable',
@@ -60,6 +61,13 @@ class StoreCvRequest extends FormRequest
             'school.*.startDate' => 'date|nullable',
             'school.*.endDate' => 'date|nullable|after_or_equal:school.*.startDate',
             'school.*.city' => 'string|nullable',
+
+            'socials' => 'array|nullable',
+            'socials.*.name' => 'string|nullable',
+            'socials.*.link' => 'string|nullable',
+
+            'licenses' => 'array|nullable',
+            'licenses.*.type' => 'string|nullable',
         ];
 
     }

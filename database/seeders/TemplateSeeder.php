@@ -23,7 +23,7 @@ class TemplateSeeder extends Seeder
             'name' => 'Berlin',
             'colors' => '#2e294e #1B998B #c5d86d #F46036',
             'pdf' => '<BerlinPDF/>',
-            'img' => 'berling.png',
+            'img' => 'Berlin.png',
         ]);
         Template::factory()->create([
             'name' => 'Stockholm',

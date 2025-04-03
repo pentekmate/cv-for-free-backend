@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCvRequest;
 use App\Models\CV;
-use App\Models\PreviousJob;
-use App\Models\Skill;
 use Illuminate\Http\Request;
 
 class CVController extends Controller
@@ -16,14 +14,10 @@ class CVController extends Controller
         try {
             $authUser = auth()->user();
             $cvs = CV::where('user_id', $authUser->id)
-                ->withAll() // Betöltjük a kapcsolódó adatokat
+                ->withAll()
                 ->get();
 
-            // return response()->json(['m' => $cvs]);
-
-            $relations = (new CV)->getSupportedRelations();
-
-            return response()->json(['relations' => $relations]);
+            return response()->json(['cvs' => $cvs]);
 
         } catch (\Exception $e) {
             // Ha bármilyen kivétel történik, hibát küldünk vissza
@@ -37,39 +31,24 @@ class CVController extends Controller
         $validatedData = $request->validated();
 
         $newCv = CV::create($validatedData['data']);
+        $relations = (new CV)->getSupportedRelations();
+        $response = [];
+        foreach ($relations as $relation) {
+            if ($request->has($relation)) {
+                if (method_exists(CV::class, $relation)) {
+                    $relationData = $request->$relation;
 
-        if (isset($validatedData['previousJobs'])) {
-            $previousJobs = $validatedData['previousJobs'];
-
-            foreach ($previousJobs as $prevJob) {
-                PreviousJob::create(array_merge($prevJob, [
-                    'cv_id' => $newCv->id,
-                ]));
+                    // Ha tömb, akkor többet hozunk létre (hasMany kapcsolat)
+                    if (is_array($relationData) && isset($relationData[0])) {
+                        foreach ($relationData as $item) {
+                            $newItem = $newCv->{$relation}()->create(array_merge($item, ['cv_id' => $newCv->id]));
+                            $response[] = [$relation => $newItem];
+                        }
+                    }
+                }
             }
         }
 
-        if (isset($validatedData['skills'])) {
-            $skills = $validatedData['skills'];
-
-            foreach ($skills as $skill) {
-                Skill::create(array_merge($skill, [
-                    'cv_id' => $newCv->id,
-                ]));
-            }
-        }
-
-        if (isset($validatedData['languages'])) {
-            $languages = $validatedData['languages'];
-
-            foreach ($languages as $language) {
-                Skill::create(array_merge($language, [
-                    'cv_id' => $newCv->id,
-                ]));
-            }
-        }
-
-        return response()->json([
-            'message' => 'cv Sikeresen létrehozva',
-            'data' => $newCv]);
+        return response()->json($response);
     }
 }

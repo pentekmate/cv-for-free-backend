@@ -9,5 +9,10 @@ class Template extends Model
 {
     use HasFactory;
 
+    public function cv()
+    {
+        return $this->hasOne(CV::class, 'cv_type_id');
+    }
+
     protected $fillable = ['name', 'colors', 'PDF', 'img'];
 }
