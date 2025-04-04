@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tier_id',
     ];
 
     /**
@@ -37,6 +38,11 @@ class User extends Authenticatable
     public function cvs(): HasMany
     {
         return $this->hasMany(Cv::class);
+    }
+
+    public function tier()
+    {
+        return $this->belongsTo(Tier::class, 'tier_id'); // Az alapértelmezett 'tier_id' kulcsot használjuk
     }
 
     /**

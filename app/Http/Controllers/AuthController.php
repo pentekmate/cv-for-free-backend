@@ -14,15 +14,9 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $key = 'login-attempts:'.$request->ip();
         $remember_me = $request->rememberMe;
 
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            return response()->json([
-                'message' => 'Túl sok bejelentkezési kísérlet. Próbáld újra később.',
-            ], 429);
-        }
-        RateLimiter::hit($key, 60);
+       
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',

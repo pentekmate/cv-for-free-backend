@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('templates', function (Blueprint $table) {
+        Schema::create('tiers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('PDF')->nullable();
-            $table->string('img');
+            $table->string('name'); // pl. 'Free', 'Pro', 'Enterprise'
+            $table->integer('pdf_limit')->default(3); // Vagy amit akarsz
             $table->timestamps();
         });
+        
     }
 
     /**

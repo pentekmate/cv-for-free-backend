@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('templates', function (Blueprint $table) {
+        Schema::create('colors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('PDF')->nullable();
-            $table->string('img');
+            $table->foreignId('template_id')->constrained()->onDelete('cascade');
+            $table->string('color')->nullable();
             $table->timestamps();
+
         });
     }
 

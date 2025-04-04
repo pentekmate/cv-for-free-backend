@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         ]);
         $this->call(TemplateSeeder::class);
         // $this->call(CVSeeder::class);
+        $this->call(ColorSeeder::class);
     }
 }

@@ -14,5 +14,8 @@ class Template extends Model
         return $this->hasOne(CV::class, 'cv_type_id');
     }
 
+    public function color(){
+        return $this->hasMany(Color::class);
+    }
     protected $fillable = ['name', 'colors', 'PDF', 'img'];
 }
