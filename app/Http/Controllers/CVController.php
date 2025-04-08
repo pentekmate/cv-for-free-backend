@@ -12,12 +12,22 @@ class CVController extends Controller
     {
         // Ellenőrizzük, hogy a felhasználó be van-e jelentkezve
         try {
-            $authUser = auth()->user();
-            $cvs = CV::where('user_id', $authUser->id)
+            // $authUser = auth()->user;
+            $userId =1;
+            $cvs = CV::where('user_id', $userId)
                 ->withAll()
                 ->get();
 
-            return response()->json(['cvs' => $cvs]);
+                return response()->json([
+                    'cvs' => $cvs->map(function($cv) {
+                        return [
+                            'id' => $cv->id,
+                            'cv_type_id' => $cv->cv_type_id,
+                            'created_at' => $cv->created_at,
+                            'blob' => base64_encode($cv->blob), 
+                        ];
+                    })
+                ]);
 
         } catch (\Exception $e) {
             // Ha bármilyen kivétel történik, hibát küldünk vissza
@@ -51,4 +61,50 @@ class CVController extends Controller
 
         return response()->json($response);
     }
+
+    public function store(Request $request)
+{
+    try {
+        // A fájl adatainak feldolgozása, bináris adatként
+        $file = $request->file('blob');
+        if ($file) {
+            // Bináris fájl tartalom
+            $fileContents = file_get_contents($file);
+        } else {
+            return response()->json(['error' => 'Nincs fájl feltöltve.'], 400);
+        }
+
+        // Validáljuk a bejövő adatokat
+        $validated = $request->validate([
+            'blob' => 'required|file|mimes:pdf|max:10240',  // Példa validálás, ha PDF-t vársz
+            'user_id' => 'required|integer',
+            'cv_type_id' => 'required|integer',
+        ]);
+
+        // // A rekord létrehozása
+        $cv = CV::create([
+            'user_id' =>$validated['user_id'],
+            'cv_type_id' =>$validated['cv_type_id'],
+            'blob' => $fileContents
+        ]);
+
+        
+        return response()->json([
+            'cv' => $cv,
+            'fh' =>$validated['user_id'],
+            'blob' => base64_encode($fileContents) 
+        ]);
+    
+    } catch (\Exception $e) {
+        // Ha hiba történik, azt itt naplózzuk
+        return response()->json(['error' => 'Hiba: ' . $e->getMessage()], 500);
+    }
 }
+
+    
+    
+
+}
+
+
+

@@ -10,10 +10,14 @@ Route::middleware(['throttle:global'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::get('/templates',[TemplateController::class,'index']);
     Route::post('/createCv', [CVController::class, 'createCv']);
+    Route::post('/storeCV', [CVController::class, 'store']);
+
+
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/userCVs', [CVController::class, 'index']);
         Route::get('/logout', [AuthController::class, 'logout']);
     });
-
+    
 });
+
+Route::get('/userCVs', [CVController::class, 'index']);

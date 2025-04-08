@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(TierSeeder::class);
         User::factory()->create([
             'email' => 'erno801@gmail.com',
             'password' => 'pwd11',
-            'tier' => 0,
         ]);
         $this->call(TemplateSeeder::class);
         // $this->call(CVSeeder::class);

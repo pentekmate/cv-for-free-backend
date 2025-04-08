@@ -15,8 +15,8 @@ class CV extends Model
 
     protected $table = 'cvs';
 
-    protected $fillable = ['tier', 'cv_type_id', 'user_id', 'userName', 'image', 'firstName', 'lastName', 'phoneNumber', 'email', 'country', 'city', 'jobTitle', 'introduce', 'age', 'ethnic'];
-
+    // protected $fillable = ['tier', 'cv_type_id', 'user_id', 'userName', 'image', 'firstName', 'lastName', 'phoneNumber', 'email', 'country', 'city', 'jobTitle', 'introduce', 'age', 'ethnic'];
+    protected $fillable = ['blob','cv_type_id','user_id'];
     public function type()
     {
         return $this->belongsTo(Template::class, 'cv_type_id');

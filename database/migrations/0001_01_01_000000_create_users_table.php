@@ -21,11 +21,11 @@ return new class extends Migration
             $table->timestamps();
 
 
-            $table->unsignedBigInteger('tier_id')->nullable(); // Tier kapcsolat
+            $table->unsignedBigInteger('tier_id')->nullable(); // A tier_id a tiers.id-re hivatkozik
             // $table->foreign('tier_id')
-            // ->references('id')
-            // ->on('tiers')  // A templates tábla id oszlopára hivatkozunk
-            // ->onDelete('set null');
+            //     ->references('id')
+            //     ->on('tiers')
+            //     ->onDelete('set null');
         });
         
 
