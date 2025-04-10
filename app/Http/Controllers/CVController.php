@@ -5,29 +5,28 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCvRequest;
 use App\Models\CV;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class CVController extends Controller
 {
     public function index(Request $request)
     {
         // Ellenőrizzük, hogy a felhasználó be van-e jelentkezve
         try {
-            // $authUser = auth()->user;
-            $userId =1;
+            $authUser = auth()->user;
+            $userId = $authUser->id;
             $cvs = CV::where('user_id', $userId)
-                ->withAll()
                 ->get();
 
-                return response()->json([
-                    'cvs' => $cvs->map(function($cv) {
-                        return [
-                            'id' => $cv->id,
-                            'cv_type_id' => $cv->cv_type_id,
-                            'created_at' => $cv->created_at,
-                            'blob' => base64_encode($cv->blob), 
-                        ];
-                    })
-                ]);
+            return response()->json([
+                'cvs' => $cvs->map(function ($cv) {
+                    return [
+                        'id' => $cv->id,
+                        'cv_type_id' => $cv->cv_type_id,
+                        'created_at' => $cv->created_at,
+                        'blob' => base64_encode($cv->blob),
+                    ];
+                }),
+            ]);
 
         } catch (\Exception $e) {
             // Ha bármilyen kivétel történik, hibát küldünk vissza
@@ -43,6 +42,17 @@ class CVController extends Controller
         $newCv = CV::create($validatedData['data']);
         $relations = (new CV)->getSupportedRelations();
         $response = [];
+
+        $file = $request->file('blob');
+        if ($file) {
+            // Bináris fájl tartalom
+            $fileContents = file_get_contents($file);
+            $newCv->blob = $fileContents;
+            $newCv->save();
+        } else {
+            return response()->json(['error' => 'Nincs fájl feltöltve.'], 400);
+        }
+
         foreach ($relations as $relation) {
             if ($request->has($relation)) {
                 if (method_exists(CV::class, $relation)) {
@@ -59,52 +69,22 @@ class CVController extends Controller
             }
         }
 
-        return response()->json($response);
+        return response()->json(['message'=>'Sikeres létrehozás']);
     }
 
-    public function store(Request $request)
-{
-    try {
-        // A fájl adatainak feldolgozása, bináris adatként
-        $file = $request->file('blob');
-        if ($file) {
-            // Bináris fájl tartalom
-            $fileContents = file_get_contents($file);
-        } else {
-            return response()->json(['error' => 'Nincs fájl feltöltve.'], 400);
-        }
+    public function show(Request $request){
+        $cv_id = $request->cv_id;
+        $cv = CV::where('id', $cv_id)
+            ->where('user_id', Auth::id()) 
+            ->withAll()
+            ->first();
 
-        // Validáljuk a bejövő adatokat
-        $validated = $request->validate([
-            'blob' => 'required|file|mimes:pdf|max:10240',  // Példa validálás, ha PDF-t vársz
-            'user_id' => 'required|integer',
-            'cv_type_id' => 'required|integer',
-        ]);
+    if (!$cv) {
+        return response()->json(['error' => 'Nincs jogosultság vagy nem létezik'], 403);
+    }
 
-        // // A rekord létrehozása
-        $cv = CV::create([
-            'user_id' =>$validated['user_id'],
-            'cv_type_id' =>$validated['cv_type_id'],
-            'blob' => $fileContents
-        ]);
+    $cv->makeHidden(['blob']); // Opció: elrejted a blob mezőt
 
-        
-        return response()->json([
-            'cv' => $cv,
-            'fh' =>$validated['user_id'],
-            'blob' => base64_encode($fileContents) 
-        ]);
-    
-    } catch (\Exception $e) {
-        // Ha hiba történik, azt itt naplózzuk
-        return response()->json(['error' => 'Hiba: ' . $e->getMessage()], 500);
+    return response()->json($cv);
     }
 }
-
-    
-    
-
-}
-
-
-

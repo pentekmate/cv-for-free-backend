@@ -14,7 +14,7 @@ class TemplateSeeder extends Seeder
     {
 
         Template::factory()->create([
-            'name' => 'Berling',
+            'name' => 'Berlin',
             'img' => 'Berlin.png',
         ]);
         Template::factory()->create([

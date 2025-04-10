@@ -38,6 +38,7 @@ class StoreCvRequest extends FormRequest
             'data.introduce' => 'string|nullable',
             'data.age' => 'integer|nullable|min:18|max:100',
             'data.ethnic' => 'string|nullable',
+            'data.blob'=>'file|mimes:pdf|max:10240',
 
             'previousJobs' => 'array|nullable',
             'previousJobs.*.employer' => 'string|nullable',
@@ -91,6 +92,7 @@ class StoreCvRequest extends FormRequest
             'data.age.min' => 'A kor legalább 18 éves kell legyen!',
             'data.age.max' => 'A kor nem haladhatja meg a 100 évet!',
             'data.ethnic.string' => 'A nemzetiségi adatnak szövegnek kell lennie!',
+            'data.blob'=>'Hiányzó fájl!',
             'previousJobs.array' => 'A korábbi munkák listája tömb formájában kell legyen!',
             'previousJobs.*.employer.string' => 'A munkaadó neve szövegnek kell lennie!',
             'previousJobs.*.jobTitle.string' => 'A munkakör címének szövegnek kell lennie!',

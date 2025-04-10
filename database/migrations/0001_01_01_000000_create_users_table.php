@@ -20,14 +20,12 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-
             $table->unsignedBigInteger('tier_id')->nullable(); // A tier_id a tiers.id-re hivatkozik
             // $table->foreign('tier_id')
             //     ->references('id')
             //     ->on('tiers')
             //     ->onDelete('set null');
         });
-        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
