@@ -26,7 +26,8 @@ class StoreCvRequest extends FormRequest
         return [
             'data.user_id' => 'integer|required',
             'data.cv_type_id' => 'integer|required',
-            'data.userName' => 'string|nullable',
+            'data.userName' => 'string|nullable', // no needed
+            'data.background' => 'string|nullable',
             'data.image' => 'string|nullable',
             'data.firstName' => 'string|nullable',
             'data.lastName' => 'string|nullable',
@@ -38,7 +39,7 @@ class StoreCvRequest extends FormRequest
             'data.introduce' => 'string|nullable',
             'data.age' => 'integer|nullable|min:18|max:100',
             'data.ethnic' => 'string|nullable',
-            'data.blob'=>'file|mimes:pdf|max:10240',
+            'data.blob' => 'file|mimes:pdf|max:10240',
 
             'previousJobs' => 'array|nullable',
             'previousJobs.*.employer' => 'string|nullable',
@@ -78,6 +79,7 @@ class StoreCvRequest extends FormRequest
         return [
             'data.user_id.required' => 'A felhasználó azonosítója kötelező!',
             'data.user_id.integer' => 'A felhasználó azonosítójának egész számnak kell lennie!',
+            'data.background.string' => 'Nincs kiválasztott szín!',
             'data.userName.string' => 'A felhasználónévnek szövegnek kell lennie!',
             'data.image.string' => 'A képnek szövegnek kell lennie!',
             'data.firstName.string' => 'A keresztnevet szövegként kell megadni!',
@@ -92,7 +94,7 @@ class StoreCvRequest extends FormRequest
             'data.age.min' => 'A kor legalább 18 éves kell legyen!',
             'data.age.max' => 'A kor nem haladhatja meg a 100 évet!',
             'data.ethnic.string' => 'A nemzetiségi adatnak szövegnek kell lennie!',
-            'data.blob'=>'Hiányzó fájl!',
+            'data.blob' => 'Hiányzó fájl!',
             'previousJobs.array' => 'A korábbi munkák listája tömb formájában kell legyen!',
             'previousJobs.*.employer.string' => 'A munkaadó neve szövegnek kell lennie!',
             'previousJobs.*.jobTitle.string' => 'A munkakör címének szövegnek kell lennie!',

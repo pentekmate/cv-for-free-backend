@@ -27,7 +27,7 @@ class CVSeeder extends Seeder
             'email' => 'john@example.com',
             'country' => 'Hungary',
             'city' => 'Budapest',
-            'jobTitle' => 'Software Engineer',
+            'jobctle' => 'Software Engineer',
             'introduce' => 'I am a passionate developer...',
             'age' => 30,
             'ethnic' => 'Caucasian',

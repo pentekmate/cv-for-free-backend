@@ -9,14 +9,14 @@ Route::middleware(['throttle:global'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/me', [AuthController::class, 'me']);
 
-
     Route::get('/templates', [TemplateController::class, 'index']);
     Route::post('/createCv', [CVController::class, 'createCv']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/logout', [AuthController::class, 'logout']);
-        Route::get('userCVs/{cv_id}',[CVController::class,'show']);
-        Route::get('/userCVs', [CVController::class, 'index']);
     });
 
 });
+
+Route::get('userCVs/{cv_id}', [CVController::class, 'show']);
+Route::get('/userCVs', [CVController::class, 'index']);

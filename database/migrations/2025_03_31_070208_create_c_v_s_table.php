@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->binary('blob')->nullable();
-
+            $table->string('background')->nullable();
             $table->integer('tier')->nullable();
             $table->string('userName')->nullable();
             $table->string('image')->nullable();

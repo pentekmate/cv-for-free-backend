@@ -6,26 +6,28 @@ use App\Http\Requests\StoreCvRequest;
 use App\Models\CV;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 class CVController extends Controller
 {
     public function index(Request $request)
     {
         // Ellenőrizzük, hogy a felhasználó be van-e jelentkezve
         try {
-            $authUser = auth()->user;
-            $userId = $authUser->id;
-            $cvs = CV::where('user_id', $userId)
+            // $authUser = auth()->user;
+            $userId = 1;
+            // $authUser->id;
+            $cvs = CV::where('user_id', $userId)->withAll()
                 ->get();
 
+            $formattedCVs = $cvs->map(function ($cv) {
+                $cvArray = $cv->toArray(); // Objektum -> tömb
+                $cvArray['blob'] = base64_encode($cv->blob); // Blob mezőt átalakítjuk
+
+                return $cvArray;
+            });
+
             return response()->json([
-                'cvs' => $cvs->map(function ($cv) {
-                    return [
-                        'id' => $cv->id,
-                        'cv_type_id' => $cv->cv_type_id,
-                        'created_at' => $cv->created_at,
-                        'blob' => base64_encode($cv->blob),
-                    ];
-                }),
+                'cvs' => $formattedCVs,
             ]);
 
         } catch (\Exception $e) {
@@ -43,7 +45,7 @@ class CVController extends Controller
         $relations = (new CV)->getSupportedRelations();
         $response = [];
 
-        $file = $request->file('blob');
+        $file = $request->file('data.blob');
         if ($file) {
             // Bináris fájl tartalom
             $fileContents = file_get_contents($file);
@@ -69,22 +71,23 @@ class CVController extends Controller
             }
         }
 
-        return response()->json(['message'=>'Sikeres létrehozás']);
+        return response()->json(['message' => 'Sikeres létrehozás']);
     }
 
-    public function show(Request $request){
+    public function show(Request $request)
+    {
         $cv_id = $request->cv_id;
         $cv = CV::where('id', $cv_id)
-            ->where('user_id', Auth::id()) 
+            ->where('user_id', Auth::id())
             ->withAll()
             ->first();
 
-    if (!$cv) {
-        return response()->json(['error' => 'Nincs jogosultság vagy nem létezik'], 403);
-    }
+        if (! $cv) {
+            return response()->json(['error' => 'Nincs jogosultság vagy nem létezik'], 403);
+        }
 
-    $cv->makeHidden(['blob']); // Opció: elrejted a blob mezőt
+        $cv->makeHidden(['blob']); // Opció: elrejted a blob mezőt
 
-    return response()->json($cv);
+        return response()->json($cv);
     }
 }
