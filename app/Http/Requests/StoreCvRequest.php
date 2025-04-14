@@ -44,7 +44,7 @@ class StoreCvRequest extends FormRequest
             'previousJobs' => 'array|nullable',
             'previousJobs.*.employer' => 'string|nullable',
             'previousJobs.*.jobTitle' => 'string|nullable',
-            'previousJobs.*.startDate' => 'date|nullable',
+            'previousJobs.*.beginDate' => 'date|nullable',
             'previousJobs.*.endDate' => 'date|nullable|after_or_equal:previousJobs.*.startDate',
             'previousJobs.*.description' => 'string|nullable',
             'previousJobs.*.city' => 'string|nullable',
@@ -60,7 +60,7 @@ class StoreCvRequest extends FormRequest
             'schools' => 'array|nullable',
             'school.*.schoolName' => 'string|nullable',
             'school.*.degree' => 'string|nullable',
-            'school.*.startDate' => 'date|nullable',
+            'school.*.beginDate' => 'date|nullable',
             'school.*.endDate' => 'date|nullable|after_or_equal:school.*.startDate',
             'school.*.city' => 'string|nullable',
 

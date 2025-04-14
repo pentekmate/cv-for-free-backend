@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('cv_id')->constrained()->onDelete('cascade'); // Kapcsolat a CV-hez
             $table->string('employer');
             $table->string('jobTitle');
-            $table->date('startDate')->nullable();
+            $table->date('beginDate')->nullable();
             $table->date('endDate')->nullable();
             $table->text('description')->nullable();
             $table->string('city')->nullable();

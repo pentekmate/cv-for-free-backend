@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('cv_id')->constrained()->onDelete('cascade');
             $table->string('schoolName')->nullable();
             $table->string('degree')->nullable();
-            $table->date('startDate')->nullable();
+            $table->date('beginDate')->nullable();
             $table->date('endDate')->nullable();
             $table->timestamps();
             $table->string('city')->nullable();
