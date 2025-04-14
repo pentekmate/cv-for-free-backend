@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCvRequest;
 use App\Models\CV;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class CVController extends Controller
 {
@@ -89,5 +90,12 @@ class CVController extends Controller
         $cv->makeHidden(['blob']); // Opció: elrejted a blob mezőt
 
         return response()->json($cv);
+    }
+
+
+    public function update(StoreCvRequest $request){
+        $validatedData = $request->validated();
+
+        return response()->json(['m'=>$validatedData]);
     }
 }

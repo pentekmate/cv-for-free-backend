@@ -18,5 +18,6 @@ Route::middleware(['throttle:global'])->group(function () {
 
 });
 
-Route::get('userCVs/{cv_id}', [CVController::class, 'show']);
+// Route::get('userCVs/{cv_id}', [CVController::class, 'show']);
 Route::get('/userCVs', [CVController::class, 'index']);
+Route::put('/userCVs/update',[CVController::class,'update']);
