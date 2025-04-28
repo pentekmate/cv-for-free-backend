@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreCvRequest extends FormRequest
+class UpdateCvRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,12 @@ class StoreCvRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'cvId' => 'integer|required',
             'data.user_id' => 'integer|required',
             'data.cv_type_id' => 'integer|required',
             'data.userName' => 'string|nullable', // no needed
             'data.background' => 'string|nullable',
-
-            'data.image' => ['nullable', 'regex:/^data:image\/(png|jpeg|jpg);base64,/'],
-
+            'data.image' => 'string|nullable',
             'data.firstName' => 'string|nullable',
             'data.lastName' => 'string|nullable',
             'data.phoneNumber' => 'string|nullable',
@@ -79,6 +78,7 @@ class StoreCvRequest extends FormRequest
     public function messages()
     {
         return [
+            'cvId.required' => 'A cv-idja közeleő.',
             'data.user_id.required' => 'A felhasználó azonosítója kötelező!',
             'data.user_id.integer' => 'A felhasználó azonosítójának egész számnak kell lennie!',
             'data.background.string' => 'Nincs kiválasztott szín!',
