@@ -33,7 +33,7 @@ class UpdateCvRequest extends FormRequest
             'data.firstName' => 'string|nullable',
             'data.lastName' => 'string|nullable',
             'data.phoneNumber' => 'string|nullable',
-            'data.email' => 'email|nullable',
+            'data.email' => 'string|nullable',
             'data.country' => 'string|nullable',
             'data.city' => 'string|nullable',
             'data.jobTitle' => 'string|nullable',
@@ -56,7 +56,7 @@ class UpdateCvRequest extends FormRequest
 
             'languages' => 'array|nullable',
             'languages.*.languageName' => 'string|nullable',
-            'languages.*.languageLevel' => 'integer|nullable',
+            'languages.*.languageLevel' => 'string|nullable',
 
             'schools' => 'array|nullable',
             'school.*.schoolName' => 'string|nullable',

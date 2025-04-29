@@ -34,7 +34,7 @@ class StoreCvRequest extends FormRequest
             'data.firstName' => 'string|nullable',
             'data.lastName' => 'string|nullable',
             'data.phoneNumber' => 'string|nullable',
-            'data.email' => 'email|nullable',
+            'data.email' => 'string|nullable',
             'data.country' => 'string|nullable',
             'data.city' => 'string|nullable',
             'data.jobTitle' => 'string|nullable',
@@ -57,7 +57,7 @@ class StoreCvRequest extends FormRequest
 
             'languages' => 'array|nullable',
             'languages.*.languageName' => 'string|nullable',
-            'languages.*.languageLevel' => 'integer|nullable',
+            'languages.*.languageLevel' => 'strng|nullable',
 
             'schools' => 'array|nullable',
             'school.*.schoolName' => 'string|nullable',
