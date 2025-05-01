@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('pdf_limit')->default(3); // Vagy amit akarsz
             $table->timestamps();
         });
-        
+
     }
 
     /**

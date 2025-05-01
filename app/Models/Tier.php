@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Tier extends Model
 {
-    protected $fillable = ["name", "pdf_limit"];
+    protected $fillable = ['name', 'pdf_limit'];
 
+    use HasFactory;
 
     public function users()
     {

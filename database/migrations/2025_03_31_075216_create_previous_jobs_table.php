@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('previous_jobs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cv_id')->constrained()->onDelete('cascade'); // Kapcsolat a CV-hez
-            $table->string('employer');
-            $table->string('jobTitle');
-            $table->date('startDate')->nullable();
+            $table->string('employer')->nullable();
+            $table->string('jobTitle')->nullable();
+            $table->date('beginDate')->nullable();
             $table->date('endDate')->nullable();
             $table->text('description')->nullable();
             $table->string('city')->nullable();

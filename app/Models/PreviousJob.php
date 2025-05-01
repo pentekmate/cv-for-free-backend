@@ -10,7 +10,7 @@ class PreviousJob extends Model
     use hasFactory;
 
     protected $fillable = [
-        'cv_id', 'employer', 'jobTitle', 'startDate', 'endDate', 'description', 'city',
+        'cv_id', 'employer', 'jobTitle', 'beginDate', 'endDate', 'description', 'city',
     ];
 
     public function cv()
