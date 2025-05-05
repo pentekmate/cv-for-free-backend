@@ -17,6 +17,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'erno801@gmail.com',
             'password' => 'pwd11',
         ]);
+        User::factory()->create([
+            'email' => 'kalap@gmail.com',
+            'password' => 'pwd11',
+        ]);
         $this->call(TemplateSeeder::class);
         // $this->call(CVSeeder::class);
         $this->call(ColorSeeder::class);

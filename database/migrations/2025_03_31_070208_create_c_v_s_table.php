@@ -24,7 +24,7 @@ return new class extends Migration
                 ->onDelete('set null');  // Ha törlik a template-t, a cv_type_id NULL-ra áll
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->binary('blob')->nullable();
+            $table->longText('blob')->nullable();
             $table->string('background')->nullable();
             $table->integer('tier')->nullable();
             $table->string('userName')->nullable();

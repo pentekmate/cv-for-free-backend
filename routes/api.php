@@ -3,9 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CVController;
 use App\Http\Controllers\TemplateController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:global'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
@@ -16,24 +15,19 @@ Route::middleware(['throttle:global'])->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/logout', [AuthController::class, 'logout']);
+
     });
 
+    Route::get('/userCVs', [CVController::class, 'index']); // ✅
+    Route::post('/userCVs/update', [CVController::class, 'update']);
 });
 
 // Route::get('userCVs/{cv_id}', [CVController::class, 'show']);
-Route::get('/userCVs', [CVController::class, 'index']);
-
-Route::post('/userCVs/update', [CVController::class, 'update']);
-
-
-
-
-
 
 Route::get('/image/{filename}', function ($filename) {
-    $path = storage_path('app/public/cv-images/' . $filename);
+    $path = storage_path('app/public/cv-images/'.$filename);
 
-    if (!file_exists($path)) {
+    if (! file_exists($path)) {
         abort(404);
     }
 
@@ -47,6 +41,3 @@ Route::get('/image/{filename}', function ($filename) {
         'Access-Control-Allow-Headers' => '*',
     ]);
 });
-
-
-

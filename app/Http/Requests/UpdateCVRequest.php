@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CV;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -11,6 +12,24 @@ class UpdateCvRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
+    // public function authorize(): bool
+    // {
+    //     $cvId = $this->input('cvId');
+
+    //     if (! $cvId) {
+    //         return false;
+    //     }
+
+    //     $cv =  CV::find($cvId);
+
+    //     return $cv && $cv->user_id === auth()->id(); // vagy Auth::id()
+    // }
+
+    // public function forbiddenResponse()
+    // {
+    // return response()->json(['error' => 'Nincs jogosultságod ehhez a művelethez.'], 403);
+    // }
+
     public function authorize(): bool
     {
         return true;

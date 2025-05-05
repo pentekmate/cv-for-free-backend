@@ -41,7 +41,7 @@ class StoreCvRequest extends FormRequest
             'data.introduce' => 'string|nullable',
             'data.age' => 'integer|nullable|min:18|max:100',
             'data.ethnic' => 'string|nullable',
-            'data.blob' => 'file|mimes:pdf|max:10240',
+            'data.blob' => 'file|mimes:pdf',
 
             'previousJobs' => 'array|nullable',
             'previousJobs.*.employer' => 'string|nullable',
