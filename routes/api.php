@@ -18,12 +18,12 @@ Route::middleware(['throttle:global'])->group(function () {
         Route::get('/logout', [AuthController::class, 'logout']);
     });
 
+    // Route::get('userCVs/{cv_id}', [CVController::class, 'show']);
+    Route::get('/userCVs', [CVController::class, 'index']);
+    
+    Route::post('/userCVs/update', [CVController::class, 'update']);
 });
 
-// Route::get('userCVs/{cv_id}', [CVController::class, 'show']);
-Route::get('/userCVs', [CVController::class, 'index']);
-
-Route::post('/userCVs/update', [CVController::class, 'update']);
 
 
 
