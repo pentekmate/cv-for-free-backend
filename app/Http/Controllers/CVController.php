@@ -42,13 +42,24 @@ class CVController extends Controller
     }
 
     public function createCv(StoreCvRequest $request)
-    {
+    {   
+
+        $cookie = $request->cookie('auth_token');
+
+        // return response()->json(['c'=>$cookie]);
+        $userId = Auth::user()->id;
+        if(!$userId){
+            return response()->json(['message'=>'Nem található felhasználó'],500);
+        }
         $validatedData = $request->validated();
         $cvData = $validatedData['data'];
+        $cvData['user_id'] = $userId;
+
 
         $imageBase64 = $cvData['image'] ?? null;
         unset($cvData['image']);
         unset($cvData['blob']);
+    
 
         $newCv = CV::create($cvData);
 

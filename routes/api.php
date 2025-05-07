@@ -11,14 +11,13 @@ Route::middleware(['throttle:global'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     Route::get('/templates', [TemplateController::class, 'index']);
-    Route::post('/createCv', [CVController::class, 'createCv']);
-
-    Route::middleware('auth:sanctum')->group(function () {
+    
+    Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/logout', [AuthController::class, 'logout']);
-
+        Route::post('/createCv', [CVController::class, 'createCv']);
+        Route::get('/userCVs', [CVController::class, 'index']); // ✅
     });
-
-    Route::get('/userCVs', [CVController::class, 'index']); // ✅
+    
     Route::post('/userCVs/update', [CVController::class, 'update']);
 });
 

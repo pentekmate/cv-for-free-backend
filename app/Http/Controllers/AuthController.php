@@ -57,17 +57,26 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
+        // Lekérjük az auth_token cookie-t
         $cookie = $request->cookie('auth_token');
+        
+        // Megpróbáljuk megtalálni a token-t
         $token = PersonalAccessToken::findToken($cookie);
-
+    
         if ($token) {
-            return response()->json(['user' => $token->tokenable]);
+            // Ha létezik a token, visszaküldjük a hozzá tartozó felhasználót és magát a token-t is
+            return response()->json([
+                'user' => $token->tokenable,
+                'token' => $cookie // Ez a token tiszta, nem titkosított formája
+            ]);
         }
-
+    
+        // Ha nincs érvényes token, hibát küldünk
         return response()->json([
             'message' => 'Nincs bejelentkezve',
         ], 401);
     }
+    
 
     // **Kijelentkezés és token törlése**
     public function logout(Request $request)

@@ -24,7 +24,7 @@ class StoreCvRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'data.user_id' => 'integer|required',
+           
             'data.cv_type_id' => 'integer|required',
             'data.userName' => 'string|nullable', // no needed
             'data.background' => 'string|nullable',
@@ -57,7 +57,7 @@ class StoreCvRequest extends FormRequest
 
             'languages' => 'array|nullable',
             'languages.*.languageName' => 'string|nullable',
-            'languages.*.languageLevel' => 'strng|nullable',
+            'languages.*.languageLevel' => 'string|nullable',
 
             'schools' => 'array|nullable',
             'school.*.schoolName' => 'string|nullable',
@@ -79,8 +79,7 @@ class StoreCvRequest extends FormRequest
     public function messages()
     {
         return [
-            'data.user_id.required' => 'A felhasználó azonosítója kötelező!',
-            'data.user_id.integer' => 'A felhasználó azonosítójának egész számnak kell lennie!',
+            
             'data.background.string' => 'Nincs kiválasztott szín!',
             'data.userName.string' => 'A felhasználónévnek szövegnek kell lennie!',
             'data.image.string' => 'A képnek szövegnek kell lennie!',
