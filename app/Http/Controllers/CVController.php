@@ -46,7 +46,6 @@ class CVController extends Controller
 
         $cookie = $request->cookie('auth_token');
 
-        // return response()->json(['c'=>$cookie]);
         $userId = Auth::user()->id;
         if(!$userId){
             return response()->json(['message'=>'Nem található felhasználó'],500);
