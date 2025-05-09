@@ -57,6 +57,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Sikeres bejelentkezés',
             'user' => $user,
+            'token'=>$token
         ])->cookie($cookie);
     }
     
