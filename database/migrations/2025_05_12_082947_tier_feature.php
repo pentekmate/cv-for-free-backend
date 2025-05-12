@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 'name', 'pdf_pages','pdf_limit','price'
-        Schema::create('tiers', function (Blueprint $table) {
+         Schema::create('tier_features', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // pl. 'Free', 'Pro', 'Enterprise'
-            $table->integer('pdf_limit')->default(3); // Vagy amit akarsz
-            $table->integer('pdf_pages');
-            $table->integer('price')->nullable();
+            $table->foreignId('tier_id')->constrained('tiers')->onDelete('cascade');
+            $table->string('label');             // megjelenítendő szöveg, pl. "Önéletrajzaid mentése"
+            $table->string('value')->nullable(); // ha van konkrét érték (pl. "3/0", "5")
+            $table->boolean('is_checked')->default(false); // true = pipálva
             $table->timestamps();
         });
-
     }
 
     /**
