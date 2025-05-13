@@ -44,7 +44,7 @@ class UpdateCvRequest extends FormRequest
     {
         return [
             'cvId' => 'integer|required',
-           
+
             'data.cv_type_id' => 'integer|required',
             'data.userName' => 'string|nullable', // no needed
             'data.background' => 'string|nullable',
@@ -98,7 +98,7 @@ class UpdateCvRequest extends FormRequest
     {
         return [
             'cvId.required' => 'A cv-idja közeleő.',
-           
+
             'data.background.string' => 'Nincs kiválasztott szín!',
             'data.userName.string' => 'A felhasználónévnek szövegnek kell lennie!',
             'data.image.string' => 'A képnek szövegnek kell lennie!',

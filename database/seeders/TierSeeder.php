@@ -25,7 +25,6 @@ class TierSeeder extends Seeder
             ['label' => 'Létrehozható Önéletrajzok', 'value' => '3/0', 'is_checked' => true],
         ]);
 
-
         Tier::create([
             'name' => 'Standard',
             'price' => 899,
@@ -33,12 +32,10 @@ class TierSeeder extends Seeder
             'pdf_limit' => 3,
         ])->features()->createMany([
             ['label' => 'Korlátozott hozzáférés a sablonokhoz', 'is_checked' => false],
-             ['label' => 'Önéletrajzaid mentése', 'is_checked' => true],
+            ['label' => 'Önéletrajzaid mentése', 'is_checked' => true],
             ['label' => 'Maximális önéletrajz oldalszám', 'value' => 2, 'is_checked' => false],
             ['label' => 'Létrehozható Önéletrajzok', 'value' => '1/0', 'is_checked' => true],
         ]);
-
-
 
         Tier::create([
             'name' => 'Ingyenes',

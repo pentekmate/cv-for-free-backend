@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('tier_features', function (Blueprint $table) {
+        Schema::create('tier_features', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tier_id')->constrained('tiers')->onDelete('cascade');
             $table->string('label');             // megjelenítendő szöveg, pl. "Önéletrajzaid mentése"

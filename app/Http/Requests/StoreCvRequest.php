@@ -24,7 +24,7 @@ class StoreCvRequest extends FormRequest
     public function rules(): array
     {
         return [
-           
+
             'data.cv_type_id' => 'integer|required',
             'data.userName' => 'string|nullable', // no needed
             'data.background' => 'string|nullable',
@@ -79,7 +79,7 @@ class StoreCvRequest extends FormRequest
     public function messages()
     {
         return [
-            
+
             'data.background.string' => 'Nincs kiválasztott szín!',
             'data.userName.string' => 'A felhasználónévnek szövegnek kell lennie!',
             'data.image.string' => 'A képnek szövegnek kell lennie!',

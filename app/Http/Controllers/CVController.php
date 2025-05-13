@@ -42,23 +42,21 @@ class CVController extends Controller
     }
 
     public function createCv(StoreCvRequest $request)
-    {   
+    {
 
         $cookie = $request->cookie('auth_token');
 
         $userId = Auth::user()->id;
-        if(!$userId){
-            return response()->json(['message'=>'Nem található felhasználó'],500);
+        if (! $userId) {
+            return response()->json(['message' => 'Nem található felhasználó'], 500);
         }
         $validatedData = $request->validated();
         $cvData = $validatedData['data'];
         $cvData['user_id'] = $userId;
 
-
         $imageBase64 = $cvData['image'] ?? null;
         unset($cvData['image']);
         unset($cvData['blob']);
-    
 
         $newCv = CV::create($cvData);
 
@@ -106,19 +104,19 @@ class CVController extends Controller
     {
         $validatedData = $request->validated();
         $cvData = $validatedData['data'];
-    
+
         $imageBase64 = $cvData['image'] ?? null;
         unset($cvData['image']);
         unset($cvData['blob']);
-    
+
         $cv = CV::find($validatedData['cvId']);
-    
+
         if (! $cv) {
             return response()->json(['error' => 'A CV nem található!'], 404);
         }
-    
+
         $cv->update($cvData);
-    
+
         // PDF fájl frissítése
         if ($file = $request->file('data.blob')) {
             if ($file->isValid()) {
@@ -129,29 +127,29 @@ class CVController extends Controller
                 return response()->json(['error' => 'Hibás fájl.'], 400);
             }
         }
-    
+
         // Kép frissítése, ha van új
         if ($imageBase64) {
             $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $imageBase64));
-            $fileName = uniqid('cv_image_') . '.jpg';
-            $filePath = 'cv-images/' . $fileName;
+            $fileName = uniqid('cv_image_').'.jpg';
+            $filePath = 'cv-images/'.$fileName;
             Storage::disk('public')->put($filePath, $imageData);
-    
+
             $cv->image = $fileName;
             $cv->save();
         }
-    
+
         // Kapcsolatok frissítése
         $relations = (new CV)->getSupportedRelations();
         $response = [];
-    
+
         foreach ($relations as $relation) {
             if ($request->has($relation) && method_exists(CV::class, $relation)) {
                 $relationData = $request->$relation;
-    
+
                 if (is_array($relationData) && isset($relationData[0])) {
                     $cv->{$relation}()->delete(); // előzőek törlése
-    
+
                     foreach ($relationData as $item) {
                         $newItem = $cv->{$relation}()->create(array_merge($item, ['cv_id' => $cv->id]));
                         $response[] = [$relation => $newItem];
@@ -159,11 +157,10 @@ class CVController extends Controller
                 }
             }
         }
-    
+
         return response()->json([
             'message' => 'CV sikeresen frissítve!',
             'cv' => $cv->makeHidden(['blob']),
         ]);
     }
-    
 }
