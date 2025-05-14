@@ -33,7 +33,7 @@ class RegistRequest extends FormRequest
             //     'regex:/[A-Z]/',
             //     'regex:/[0-9]/',
             // ],
-            'password'=>'string|required',
+            'password' => 'string|required',
             'userName' => 'string|required|max:45',
             'passwordAgain' => 'required|same:password',
             'termsOfUseAccepted' => 'accepted', // ezt automatikusan true-nak értelmezi

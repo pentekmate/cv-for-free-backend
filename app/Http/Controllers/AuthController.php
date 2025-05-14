@@ -28,7 +28,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-       $user = User::with('tier')->where('email', $request->email)->first();
+        $user = User::with('tier')->where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -79,7 +79,7 @@ class AuthController extends Controller
 
         return response()->json([
             'user' => $user,
-            'token' => $cookieToken
+            'token' => $cookieToken,
         ]);
     }
 

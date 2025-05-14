@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\EncryptionHelper;
+use App\Http\Requests\DeleteCVRequest;
 use App\Http\Requests\StoreCvRequest;
 use App\Http\Requests\UpdateCvRequest;
 use App\Models\CV;
@@ -20,7 +22,7 @@ class CVController extends Controller
 
             $formattedCVs = $cvs->map(function ($cv) {
                 $cvArray = $cv->toArray();
-
+                $cvArray = EncryptionHelper::decryptFields($cvArray);
                 // Ha az image mezőben van útvonal, csinálunk belőle teljes URL-t
                 if ($cv->image) {
                     $cvArray['image'] = url('api/image/'.basename($cv->image));
@@ -58,6 +60,7 @@ class CVController extends Controller
         unset($cvData['image']);
         unset($cvData['blob']);
 
+        $cvData = EncryptionHelper::encryptFields($cvData);
         $newCv = CV::create($cvData);
 
         // PDF fájl mentése
@@ -114,7 +117,7 @@ class CVController extends Controller
         if (! $cv) {
             return response()->json(['error' => 'A CV nem található!'], 404);
         }
-
+        $cvData = EncryptionHelper::encryptFields($cvData);
         $cv->update($cvData);
 
         // PDF fájl frissítése
@@ -162,5 +165,17 @@ class CVController extends Controller
             'message' => 'CV sikeresen frissítve!',
             'cv' => $cv->makeHidden(['blob']),
         ]);
+    }
+
+    public function delete(DeleteCVRequest $request)
+    {
+        $cv = CV::find($request->cvId);
+        try {
+            $cv->delete();
+
+            return response()->json(['message' => 'Sikeresen törölve.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hiba történt a törlés során.'], 500);
+        }
     }
 }

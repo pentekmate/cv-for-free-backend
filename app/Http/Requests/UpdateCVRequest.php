@@ -48,7 +48,7 @@ class UpdateCvRequest extends FormRequest
             'data.cv_type_id' => 'integer|required',
             'data.userName' => 'string|nullable', // no needed
             'data.background' => 'string|nullable',
-            'data.image' => 'string|nullable',
+            'data.image' => ['nullable', 'string'],
             'data.firstName' => 'string|nullable',
             'data.lastName' => 'string|nullable',
             'data.phoneNumber' => 'string|nullable',
