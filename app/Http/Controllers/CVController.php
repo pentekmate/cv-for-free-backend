@@ -6,6 +6,7 @@ use App\Helpers\EncryptionHelper;
 use App\Http\Requests\DeleteCVRequest;
 use App\Http\Requests\StoreCvRequest;
 use App\Http\Requests\UpdateCvRequest;
+use App\Http\Requests\ShowCVRequest;
 use App\Models\CV;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,8 @@ class CVController extends Controller
     public function index(Request $request)
     {
         try {
-            // $userId = Auth::user()->id; // Teszteléshez
-            $userId = 1;
+            $userId = Auth::user()->id; // Teszteléshez
+            // $userId = 1;
             $cvs = CV::where('user_id', $userId)->withAll()->get();
 
             $formattedCVs = $cvs->map(function ($cv) {
@@ -176,6 +177,17 @@ class CVController extends Controller
             return response()->json(['message' => 'Sikeresen törölve.']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Hiba történt a törlés során.'], 500);
+        }
+    }
+
+    public function show(ShowCVRequest $request){
+        try{
+            $cv =  CV::withAll()->find($request->cvId);
+
+            return response()->json(['m'=>$cv]);
+        }
+        catch (\Exception $e) {
+            return response()->json(['error' => 'Hiba történt a lekérdezés során.'], 500);
         }
     }
 }
