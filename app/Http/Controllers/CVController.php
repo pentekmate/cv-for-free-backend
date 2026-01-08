@@ -7,6 +7,7 @@ use App\Http\Requests\DeleteCVRequest;
 use App\Http\Requests\ShowCVRequest;
 use App\Http\Requests\StoreCvRequest;
 use App\Http\Requests\UpdateCvRequest;
+
 use App\Models\CV;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
