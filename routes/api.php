@@ -18,7 +18,6 @@ Route::middleware(['throttle:global'])->group(function () {
         Route::post('/createCv', [CVController::class, 'createCv']);
         Route::get('/userCVs', [CVController::class, 'index']); // ✅
         Route::post('/userCVs/update', [CVController::class, 'update']);
-        // Route::get('/userCVs/show',[CVController::class,'show']);
         Route::post('/deleteCV', [CVController::class, 'delete']);
     });
 
