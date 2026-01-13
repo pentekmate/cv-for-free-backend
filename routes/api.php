@@ -8,20 +8,21 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:global'])->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::get('/tiers', [SubscriptionController::class, 'index']);
+    // Route::post('/login', [AuthController::class, 'login']);
+    // Route::get('/me', [AuthController::class, 'me']);
+    // Route::get('/tiers', [SubscriptionController::class, 'index']);
     Route::get('/templates', [TemplateController::class, 'index']);
+    Route::post('/createCv', [CVController::class, 'createCv']);
 
-    Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/createCv', [CVController::class, 'createCv']);
-        Route::get('/userCVs', [CVController::class, 'index']); // ✅
-        Route::post('/userCVs/update', [CVController::class, 'update']);
-        Route::post('/deleteCV', [CVController::class, 'delete']);
-    });
+    // Route::middleware(['auth:sanctum'])->group(function () {
+    //     Route::post('/logout', [AuthController::class, 'logout']);
+    //     Route::post('/createCv', [CVController::class, 'createCv']);
+    //     Route::get('/userCVs', [CVController::class, 'index']); // ✅
+    //     Route::post('/userCVs/update', [CVController::class, 'update']);
+    //     Route::post('/deleteCV', [CVController::class, 'delete']);
+    // });
 
-    Route::post('/regist', [AuthController::class, 'regist']);
+    // Route::post('/regist', [AuthController::class, 'regist']);
 });
 
 // Route::get('userCVs/{cv_id}', [CVController::class, 'show']);

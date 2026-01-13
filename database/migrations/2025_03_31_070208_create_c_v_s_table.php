@@ -15,30 +15,30 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->unsignedBigInteger('cv_type_id')->nullable();
+            // $table->unsignedBigInteger('cv_type_id')->nullable();
 
-            // Létrehozzuk az idegen kulcs kapcsolatot
-            $table->foreign('cv_type_id')
-                ->references('id')
-                ->on('templates')  // A templates tábla id oszlopára hivatkozunk
-                ->onDelete('set null');  // Ha törlik a template-t, a cv_type_id NULL-ra áll
+            // // Létrehozzuk az idegen kulcs kapcsolatot
+            // $table->foreign('cv_type_id')
+            //     ->references('id')
+            //     ->on('templates')  // A templates tábla id oszlopára hivatkozunk
+            //     ->onDelete('set null')->nullable();  // Ha törlik a template-t, a cv_type_id NULL-ra áll
 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->longText('blob')->nullable();
-            $table->string('background')->nullable();
-            $table->integer('tier')->nullable();
-            $table->string('userName')->nullable();
-            $table->string('image')->nullable();
-            $table->string('firstName')->nullable();
-            $table->string('lastName')->nullable();
-            $table->string('phoneNumber')->nullable();
-            $table->string('email')->nullable();
-            $table->string('country')->nullable();
-            $table->string('city')->nullable();
-            $table->string('jobTitle')->nullable();
-            $table->text('introduce')->nullable();
-            $table->integer('age')->nullable();
-            $table->string('ethnic')->nullable();
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade')->nullable();
+            // $table->longText('blob')->nullable();
+            // $table->string('background')->nullable();
+            // $table->integer('tier')->nullable();
+            // $table->string('userName')->nullable();
+            // $table->string('image')->nullable();
+            // $table->string('firstName')->nullable();
+            // $table->string('lastName')->nullable();
+            // $table->string('phoneNumber')->nullable();
+            // $table->string('email')->nullable();
+            // $table->string('country')->nullable();
+            // $table->string('city')->nullable();
+            // $table->string('jobTitle')->nullable();
+            // $table->text('introduce')->nullable();
+            // $table->integer('age')->nullable();
+            // $table->string('ethnic')->nullable();
 
         });
     }

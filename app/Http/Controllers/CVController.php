@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\EncryptionHelper;
 use App\Http\Requests\DeleteCVRequest;
-use App\Http\Requests\ShowCVRequest;
 use App\Http\Requests\StoreCvRequest;
 use App\Http\Requests\UpdateCvRequest;
-
 use App\Models\CV;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,65 +41,90 @@ class CVController extends Controller
             return response()->json(['message' => $e->getMessage()], 401);
         }
     }
+    //region
+    // public function createCv(StoreCvRequest $request)
+    // {
 
-    public function createCv(StoreCvRequest $request)
+    //     $cookie = $request->cookie('auth_token');
+
+    //     $userId = Auth::user()->id;
+    //     if (! $userId) {
+    //         return response()->json(['message' => 'Nem található felhasználó'], 500);
+    //     }
+    //     $validatedData = $request->validated();
+    //     $cvData = $validatedData['data'];
+    //     $cvData['user_id'] = $userId;
+
+    //     $imageBase64 = $cvData['image'] ?? null;
+    //     unset($cvData['image']);
+    //     unset($cvData['blob']);
+
+    //     $cvData = EncryptionHelper::encryptFields($cvData);
+    //     $newCv = CV::create($cvData);
+
+    //     // PDF fájl mentése
+    //     if ($file = $request->file('data.blob')) {
+
+    //         $file = file_get_contents($file);
+    //         $base64 = base64_encode($file);
+    //         $newCv->blob = $base64;
+    //         $newCv->save();
+    //     } else {
+    //         return response()->json(['error' => 'Nincs fájl feltöltve.'], 400);
+    //     }
+
+    //     // Base64 kép mentése
+    //     if ($imageBase64) {
+    //         $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $imageBase64));
+    //         $fileName = uniqid('cv_image_').'.jpg';
+    //         $filePath = 'cv-images/'.$fileName;
+    //         Storage::disk('public')->put($filePath, $imageData);
+    //         $newCv->image = $fileName;
+    //         $newCv->save();
+    //     }
+
+    //     // Kapcsolatok kezelése
+    //     $relations = (new CV)->getSupportedRelations();
+    //     $response = [];
+
+    //     foreach ($relations as $relation) {
+    //         if ($request->has($relation) && method_exists(CV::class, $relation)) {
+    //             $relationData = $request->$relation;
+    //             if (is_array($relationData) && isset($relationData[0])) {
+    //                 foreach ($relationData as $item) {
+    //                     $newItem = $newCv->{$relation}()->create(array_merge($item, ['cv_id' => $newCv->id]));
+    //                     $response[] = [$relation => $newItem];
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     return response()->json(['message' => 'Sikeres létrehozás']);
+    // }
+    //endregion
+
+    public function createCv(Request $request)
     {
-
-        $cookie = $request->cookie('auth_token');
-
-        $userId = Auth::user()->id;
-        if (! $userId) {
-            return response()->json(['message' => 'Nem található felhasználó'], 500);
+        if ($request->header('X-App-Key') !== env('FRONTEND_APP_KEY')) {
+            abort(403);
         }
-        $validatedData = $request->validated();
-        $cvData = $validatedData['data'];
-        $cvData['user_id'] = $userId;
-
-        $imageBase64 = $cvData['image'] ?? null;
-        unset($cvData['image']);
-        unset($cvData['blob']);
-
-        $cvData = EncryptionHelper::encryptFields($cvData);
-        $newCv = CV::create($cvData);
-
-        // PDF fájl mentése
-        if ($file = $request->file('data.blob')) {
-
-            $file = file_get_contents($file);
-            $base64 = base64_encode($file);
-            $newCv->blob = $base64;
+        try {
+            $newCv = new CV;
             $newCv->save();
-        } else {
-            return response()->json(['error' => 'Nincs fájl feltöltve.'], 400);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'CV sikeresen létrehozva!',
+            ], 201);
+
+        } catch (\Exception $e) {
+            // Hibakezelés: visszaadjuk a hibát JSON-ban
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiba történt a CV létrehozásakor.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // Base64 kép mentése
-        if ($imageBase64) {
-            $imageData = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $imageBase64));
-            $fileName = uniqid('cv_image_').'.jpg';
-            $filePath = 'cv-images/'.$fileName;
-            Storage::disk('public')->put($filePath, $imageData);
-            $newCv->image = $fileName;
-            $newCv->save();
-        }
-
-        // Kapcsolatok kezelése
-        $relations = (new CV)->getSupportedRelations();
-        $response = [];
-
-        foreach ($relations as $relation) {
-            if ($request->has($relation) && method_exists(CV::class, $relation)) {
-                $relationData = $request->$relation;
-                if (is_array($relationData) && isset($relationData[0])) {
-                    foreach ($relationData as $item) {
-                        $newItem = $newCv->{$relation}()->create(array_merge($item, ['cv_id' => $newCv->id]));
-                        $response[] = [$relation => $newItem];
-                    }
-                }
-            }
-        }
-
-        return response()->json(['message' => 'Sikeres létrehozás']);
     }
 
     public function update(UpdateCvRequest $request)
@@ -179,5 +202,4 @@ class CVController extends Controller
             return response()->json(['error' => 'Hiba történt a törlés során.'], 500);
         }
     }
-
 }

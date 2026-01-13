@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Requests;
+
 use App\Models\CV;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,7 +12,7 @@ class ShowCVRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-     public function authorize(): bool
+    public function authorize(): bool
     {
         $cvId = $this->input('cvId');
 
@@ -31,7 +33,6 @@ class ShowCVRequest extends FormRequest
     {
         return response()->json(['error' => 'Nincs jogosultságod ehhez a művelethez.'], 403);
     }
-
 
     /**
      * Get the validation rules that apply to the request.

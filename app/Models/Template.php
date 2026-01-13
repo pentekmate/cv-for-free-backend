@@ -14,7 +14,7 @@ class Template extends Model
         return $this->hasOne(CV::class, 'cv_type_id');
     }
 
-    public function color()
+    public function colors()
     {
         return $this->hasMany(Color::class);
     }
