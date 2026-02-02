@@ -9,9 +9,20 @@ class TemplateController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->header('X-App-Key') !== env('FRONTEND_APP_KEY')) {
-            abort(403);
+       $header = $request->header('X-App-Key') 
+                  ?? $request->header('x-app-key') 
+                  ?? $_SERVER['HTTP_X_APP_KEY'] 
+                  ?? $_SERVER['HTTP_x_app_key'] 
+                  ?? null;
+
+        if ($header !== env('FRONTEND_APP_KEY')) {
+            abort(403, 'Forbidden: Invalid App Key');
         }
+
+    //  if ($request->header('X-App-Key') !== env('FRONTEND_APP_KEY')) {
+    //         abort(403);
+    //     }
+
         $templates = Cache::remember('templates', 60, function () {
             return Template::with('colors')->get()->map(function ($template) {
                 return [
