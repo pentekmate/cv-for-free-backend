@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use App\Models\Template;
 use Illuminate\Support\Facades\Cache;
 
 class TemplateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->header('X-App-Key') !== env('FRONTEND_APP_KEY')) {
+            abort(403);
+        }
         $templates = Cache::remember('templates', 60, function () {
             return Template::with('colors')->get()->map(function ($template) {
                 return [
