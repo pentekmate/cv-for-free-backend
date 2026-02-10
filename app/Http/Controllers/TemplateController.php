@@ -38,5 +38,10 @@ class TemplateController extends Controller
         });
 
         return response()->json($templates);
+    //  return response()->json([
+    //         'success' => true,
+    //         'message' => 'Hello world!',
+    //     ]);
+    
     }
 }

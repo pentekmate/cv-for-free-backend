@@ -15,31 +15,49 @@ class CVController extends Controller
 {
     public function index(Request $request)
     {
-        try {
-            $userId = Auth::user()->id; // Teszteléshez
-            $cvs = CV::where('user_id', $userId)->withAll()->get();
+             $header = $request->header('X-App-Key') 
+                  ?? $request->header('x-app-key') 
+                  ?? $_SERVER['HTTP_X_APP_KEY'] 
+                  ?? $_SERVER['HTTP_x_app_key'] 
+                  ?? null;
 
-            $formattedCVs = $cvs->map(function ($cv) {
-                $cvArray = $cv->toArray();
-                $cvArray = EncryptionHelper::decryptFields($cvArray);
-                // Ha az image mezőben van útvonal, csinálunk belőle teljes URL-t
-                if ($cv->image) {
-                    $cvArray['image'] = url('api/image/'.basename($cv->image));
-
-                } else {
-                    $cvArray['image'] = null;
-                }
-
-                return $cvArray;
-            });
-
-            return response()->json([
-                'cvs' => $formattedCVs,
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 401);
+        if ($header !== env('FRONTEND_APP_KEY')) {
+            abort(403, 'Forbidden: Invalid App Key');
         }
+
+        $cvs = CV::all();
+
+        return response()->json([
+            'cvs'=>$cvs->count()
+        ]);
+
+        //region
+        // try {
+        //     $userId = Auth::user()->id; // Teszteléshez
+        //     $cvs = CV::where('user_id', $userId)->withAll()->get();
+
+        //     $formattedCVs = $cvs->map(function ($cv) {
+        //         $cvArray = $cv->toArray();
+        //         $cvArray = EncryptionHelper::decryptFields($cvArray);
+        //         // Ha az image mezőben van útvonal, csinálunk belőle teljes URL-t
+        //         if ($cv->image) {
+        //             $cvArray['image'] = url('api/image/'.basename($cv->image));
+
+        //         } else {
+        //             $cvArray['image'] = null;
+        //         }
+
+        //         return $cvArray;
+        //     });
+
+        //     return response()->json([
+        //         'cvs' => $formattedCVs,
+        //     ]);
+
+        // } catch (\Exception $e) {
+        //     return response()->json(['message' => $e->getMessage()], 401);
+        // }
+        //endregion
     }
     //region
     // public function createCv(StoreCvRequest $request)
@@ -105,9 +123,17 @@ class CVController extends Controller
 
     public function createCv(Request $request)
     {
-        if ($request->header('X-App-Key') !== env('FRONTEND_APP_KEY')) {
-            abort(403);
+        $header = $request->header('X-App-Key') 
+                  ?? $request->header('x-app-key') 
+                  ?? $_SERVER['HTTP_X_APP_KEY'] 
+                  ?? $_SERVER['HTTP_x_app_key'] 
+                  ?? null;
+
+        if ($header !== env('FRONTEND_APP_KEY')) {
+            abort(403, 'Forbidden: Invalid App Key');
         }
+
+
         try {
             $newCv = new CV;
             $newCv->save();
