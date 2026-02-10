@@ -15,23 +15,14 @@ class CVController extends Controller
 {
     public function index(Request $request)
     {
-             $header = $request->header('X-App-Key') 
-                  ?? $request->header('x-app-key') 
-                  ?? $_SERVER['HTTP_X_APP_KEY'] 
-                  ?? $_SERVER['HTTP_x_app_key'] 
-                  ?? null;
-
-        if ($header !== env('FRONTEND_APP_KEY')) {
-            abort(403, 'Forbidden: Invalid App Key');
-        }
 
         $cvs = CV::all();
 
         return response()->json([
-            'cvs'=>$cvs->count()
+            'cvs' => $cvs->count(),
         ]);
 
-        //region
+        // region
         // try {
         //     $userId = Auth::user()->id; // Teszteléshez
         //     $cvs = CV::where('user_id', $userId)->withAll()->get();
@@ -57,9 +48,9 @@ class CVController extends Controller
         // } catch (\Exception $e) {
         //     return response()->json(['message' => $e->getMessage()], 401);
         // }
-        //endregion
+        // endregion
     }
-    //region
+    // region
     // public function createCv(StoreCvRequest $request)
     // {
 
@@ -119,20 +110,10 @@ class CVController extends Controller
 
     //     return response()->json(['message' => 'Sikeres létrehozás']);
     // }
-    //endregion
+    // endregion
 
     public function createCv(Request $request)
     {
-        $header = $request->header('X-App-Key') 
-                  ?? $request->header('x-app-key') 
-                  ?? $_SERVER['HTTP_X_APP_KEY'] 
-                  ?? $_SERVER['HTTP_x_app_key'] 
-                  ?? null;
-
-        if ($header !== env('FRONTEND_APP_KEY')) {
-            abort(403, 'Forbidden: Invalid App Key');
-        }
-
 
         try {
             $newCv = new CV;

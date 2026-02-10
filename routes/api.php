@@ -11,9 +11,11 @@ Route::middleware(['throttle:global'])->group(function () {
     // Route::post('/login', [AuthController::class, 'login']);
     // Route::get('/me', [AuthController::class, 'me']);
     // Route::get('/tiers', [SubscriptionController::class, 'index']);
-    Route::get('/templates', [TemplateController::class, 'index']);
-    Route::post('/createCv', [CVController::class, 'createCv']);
-    Route::get('/getCVS',[CVController::class,'index']);
+    Route::middleware('app.key')->group(function () {
+        Route::get('/templates', [TemplateController::class, 'index']);
+        Route::post('/createCv', [CVController::class, 'createCv']);
+        Route::get('/getCVS', [CVController::class, 'index']);
+    });
 
     // Route::middleware(['auth:sanctum'])->group(function () {
     //     Route::post('/logout', [AuthController::class, 'logout']);
