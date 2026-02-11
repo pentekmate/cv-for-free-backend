@@ -22,7 +22,7 @@ class CheckAppKey
                   ?? null;
 
         if ($header !== env('FRONTEND_APP_KEY')) {
-            abort(403, 'Forbidden: Invalid App Key');
+            abort(403, 'Forbidden');
         }
 
         return $next($request);

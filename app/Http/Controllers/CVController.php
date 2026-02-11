@@ -15,14 +15,24 @@ class CVController extends Controller
 {
     public function index(Request $request)
     {
+        try{
+            $cvs = CV::all();
+            return response()->json([
+                'cvs' => $cvs->count(),
+            ]);
 
-        $cvs = CV::all();
+        }catch (\Exception $e) {
+            // Hibakezelés: visszaadjuk a hibát JSON-ban
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiba történt a lekérdezés során.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
 
-        return response()->json([
-            'cvs' => $cvs->count(),
-        ]);
 
-        // region
+
+        // #region
         // try {
         //     $userId = Auth::user()->id; // Teszteléshez
         //     $cvs = CV::where('user_id', $userId)->withAll()->get();
@@ -48,9 +58,9 @@ class CVController extends Controller
         // } catch (\Exception $e) {
         //     return response()->json(['message' => $e->getMessage()], 401);
         // }
-        // endregion
+        // #endregion
     }
-    // region
+    // #region
     // public function createCv(StoreCvRequest $request)
     // {
 
@@ -110,7 +120,7 @@ class CVController extends Controller
 
     //     return response()->json(['message' => 'Sikeres létrehozás']);
     // }
-    // endregion
+    // #endregion
 
     public function createCv(Request $request)
     {
