@@ -24,6 +24,7 @@ services:
         depends_on:
             - mysql
 
+
     mysql:
         image: 'mysql:8.4'
         ports:
@@ -50,6 +51,7 @@ services:
             retries: 3
             timeout: 5s
 
+
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
         container_name: laravel_phpmyadmin
@@ -65,9 +67,11 @@ services:
         depends_on:
             - mysql
 
+
 networks:
     sail:
         driver: bridge
+
 
 volumes:
     sail-mysql:

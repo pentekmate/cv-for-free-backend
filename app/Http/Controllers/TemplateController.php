@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Template;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class TemplateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+
         $templates = Cache::remember('templates', 60, function () {
             return Template::with('colors')->get()->map(function ($template) {
                 return [
@@ -24,5 +26,10 @@ class TemplateController extends Controller
         });
 
         return response()->json($templates);
+        //  return response()->json([
+        //         'success' => true,
+        //         'message' => 'Hello world!',
+        //     ]);
+
     }
 }

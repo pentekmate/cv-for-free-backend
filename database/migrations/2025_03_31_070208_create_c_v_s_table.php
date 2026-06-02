@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('cvs', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-
+            $table->string('cvType');
+            $table->string('pickedBG');
             // $table->unsignedBigInteger('cv_type_id')->nullable();
 
             // // Létrehozzuk az idegen kulcs kapcsolatot

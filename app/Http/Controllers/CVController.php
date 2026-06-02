@@ -16,32 +16,50 @@ class CVController extends Controller
     public function index(Request $request)
     {
         try {
-            $userId = Auth::user()->id; // Teszteléshez
-            $cvs = CV::where('user_id', $userId)->withAll()->get();
-
-            $formattedCVs = $cvs->map(function ($cv) {
-                $cvArray = $cv->toArray();
-                $cvArray = EncryptionHelper::decryptFields($cvArray);
-                // Ha az image mezőben van útvonal, csinálunk belőle teljes URL-t
-                if ($cv->image) {
-                    $cvArray['image'] = url('api/image/'.basename($cv->image));
-
-                } else {
-                    $cvArray['image'] = null;
-                }
-
-                return $cvArray;
-            });
+            $cvs = CV::all();
 
             return response()->json([
-                'cvs' => $formattedCVs,
+                'cvs' => $cvs->count(),
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 401);
+            // Hibakezelés: visszaadjuk a hibát JSON-ban
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiba történt a lekérdezés során.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
+
+        // #region
+        // try {
+        //     $userId = Auth::user()->id; // Teszteléshez
+        //     $cvs = CV::where('user_id', $userId)->withAll()->get();
+
+        //     $formattedCVs = $cvs->map(function ($cv) {
+        //         $cvArray = $cv->toArray();
+        //         $cvArray = EncryptionHelper::decryptFields($cvArray);
+        //         // Ha az image mezőben van útvonal, csinálunk belőle teljes URL-t
+        //         if ($cv->image) {
+        //             $cvArray['image'] = url('api/image/'.basename($cv->image));
+
+        //         } else {
+        //             $cvArray['image'] = null;
+        //         }
+
+        //         return $cvArray;
+        //     });
+
+        //     return response()->json([
+        //         'cvs' => $formattedCVs,
+        //     ]);
+
+        // } catch (\Exception $e) {
+        //     return response()->json(['message' => $e->getMessage()], 401);
+        // }
+        // #endregion
     }
-    //region
+    // #region
     // public function createCv(StoreCvRequest $request)
     // {
 
@@ -101,15 +119,21 @@ class CVController extends Controller
 
     //     return response()->json(['message' => 'Sikeres létrehozás']);
     // }
-    //endregion
+    // #endregion
 
     public function createCv(Request $request)
     {
-        if ($request->header('X-App-Key') !== env('FRONTEND_APP_KEY')) {
-            abort(403);
-        }
+
         try {
+            $validated = $request->validate([
+                'cvType' => 'required|string',
+                'pickedBG' => 'required|string',
+            ]);
+
             $newCv = new CV;
+            
+            $newCv->cv_type = $validated['cvType'];
+            $newCv->picked_bg = $validated['pickedBG'];
             $newCv->save();
 
             return response()->json([
@@ -117,8 +141,14 @@ class CVController extends Controller
                 'message' => 'CV sikeresen létrehozva!',
             ], 201);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Ha nem küldted el az adatokat a frontendről, itt fog elszállni szép hibaüzenettel
+            return response()->json([
+                'success' => false,
+                'message' => 'Hiányzó adatok.',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            // Hibakezelés: visszaadjuk a hibát JSON-ban
             return response()->json([
                 'success' => false,
                 'message' => 'Hiba történt a CV létrehozásakor.',
