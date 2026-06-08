@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('cvs', function (Blueprint $table) {
+        Schema::table('cvs', function (Blueprint $table) {
             // nullable() kell, hogy a régi 104 rekordnál ne szálljon el hibával (ott NULL lesz az értékük)
             $table->string('cv_type')->nullable()->after('id');
             $table->string('picked_bg')->nullable()->after('cv_type');

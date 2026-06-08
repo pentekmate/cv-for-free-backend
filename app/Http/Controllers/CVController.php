@@ -131,7 +131,7 @@ class CVController extends Controller
             ]);
 
             $newCv = new CV;
-            
+
             $newCv->cv_type = $validated['cvType'];
             $newCv->picked_bg = $validated['pickedBG'];
             $newCv->save();
