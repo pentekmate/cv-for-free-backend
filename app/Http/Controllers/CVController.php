@@ -7,7 +7,9 @@ use App\Http\Requests\DeleteCVRequest;
 use App\Http\Requests\StoreCvRequest;
 use App\Http\Requests\UpdateCvRequest;
 use App\Models\CV;
+use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -231,5 +233,74 @@ class CVController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Hiba történt a törlés során.'], 500);
         }
+    }
+
+    public function getAdminPageInfo(Request $request)
+    {
+        $weeklyStartDate = Carbon::now()->subDays(6)->startOfDay();
+
+        $weeklyDownloads = DB::table('cvs')
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
+            ->where('created_at', '>=', $weeklyStartDate)
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->pluck('count', 'date');
+
+        $weeklyChartData = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $dateString = Carbon::now()->subDays($i)->toDateString();
+            $weeklyChartData[$dateString] = $weeklyDownloads[$dateString] ?? 0;
+        }
+
+        $monthlyStartDate = Carbon::now()->subMonths(11)->startOfMonth();
+
+        $monthlyDownloads = DB::table('cvs')
+            ->select(DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"), DB::raw('count(*) as count'))
+            ->where('created_at', '>=', $monthlyStartDate)
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->pluck('count', 'month');
+
+        $monthlyChartData = [];
+        for ($i = 11; $i >= 0; $i--) {
+
+            $monthString = Carbon::now()->subMonths($i)->format('Y-m');
+            $monthlyChartData[$monthString] = $monthlyDownloads[$monthString] ?? 0;
+        }
+
+        $absoluteRecords = DB::table('cvs')
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
+            ->groupBy('date')
+            ->orderBy('count', 'desc')
+            ->limit(3)
+            ->get();
+
+        $weeklyDistribution = DB::table('cvs')
+            ->select(DB::raw('DAYOFWEEK(created_at) as day_num'), DB::raw('count(*) as count'))
+            ->groupBy('day_num')
+            ->orderBy('day_num', 'asc')
+            ->pluck('count', 'day_num');
+
+        $daysMap = [
+            1 => 'Vasárnap', 2 => 'Hétfő', 3 => 'Kedd',
+            4 => 'Szerda', 5 => 'Csütörtök', 6 => 'Péntek', 7 => 'Szombat',
+        ];
+
+        $bestDaysOfWeek = [];
+        foreach ($daysMap as $num => $name) {
+            $bestDaysOfWeek[$name] = $weeklyDistribution[$num] ?? 0;
+        }
+
+        return response()->json([
+            'charts' => [
+                'weekly' => $weeklyChartData,
+                'monthly' => $monthlyChartData,
+            ],
+            'all_time_insights' => [
+                'absolute_records' => $absoluteRecords,
+                'best_days_of_week' => $bestDaysOfWeek,
+            ],
+
+        ]);
     }
 }

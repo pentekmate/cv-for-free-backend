@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CVController;
-use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TemplateController;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ Route::middleware(['throttle:global'])->group(function () {
         Route::post('/createCv', [CVController::class, 'createCv']);
         Route::get('/getCVS', [CVController::class, 'index']);
         Route::post('/feedback', [FeedbackController::class, 'store']);
+        Route::get('/dashboard', [AdminDashboardController::class, 'getAdminPageInfo']);
     });
 
     // Route::middleware(['auth:sanctum'])->group(function () {
